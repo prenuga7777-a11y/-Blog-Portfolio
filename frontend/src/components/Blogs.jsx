@@ -4,6 +4,8 @@ import { onAuthStateChanged } from "firebase/auth";
 import axios from "axios";
 import Footer from './common/Footer';
 
+const API_URL = "https://blog-portfolio-3nxr.onrender.com";
+
 function Blogs() {
 
     const [blogs, setBlogs] = useState([]);
@@ -31,7 +33,7 @@ function Blogs() {
     const fetchBlogs = async () => {
         try {
             const res = await axios.get(
-                "http://localhost:5000/api/blogs"
+                `${API_URL}/api/blogs`
             );
 
             setBlogs(res.data);
@@ -50,7 +52,7 @@ function Blogs() {
     const handleLike = async (blog_id) => {
         try {
             await axios.patch(
-                `http://localhost:5000/api/blogs/like/${blog_id}`
+                `${API_URL}/api/blogs/like/${blog_id}`
             );
 
             fetchBlogs();
@@ -83,7 +85,7 @@ function Blogs() {
             });
 
             const response = await axios.post(
-                "http://localhost:5000/api/blogs",
+                `${API_URL}/api/blogs`,
                 {
                     newTitle,
                     date,
@@ -136,7 +138,7 @@ function Blogs() {
             const token = await user.getIdToken();
 
             const response = await axios.patch(
-                `http://localhost:5000/api/blogs/${blog_id}`,
+                `${API_URL}/api/blogs/${blog_id}`,
                 {
                     newTitle: editTitle,
                     newContent: editContent
@@ -197,7 +199,7 @@ function Blogs() {
             const token = await user.getIdToken();
 
             const response = await axios.delete(
-                `http://localhost:5000/api/blogs/${blog_id}`,
+                `${API_URL}/api/blogs/${blog_id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
