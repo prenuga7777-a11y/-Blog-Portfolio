@@ -9,7 +9,9 @@ const cors = require("cors");
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getAuth } = require("firebase-admin/auth");
 
-const serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = require(
+    process.env.FIREBASE_SERVICE_ACCOUNT_PATH || "./serviceAccountKey.json"
+);
 
 initializeApp({
     credential: cert(serviceAccount)
@@ -55,13 +57,17 @@ function adminOnly(req, res, next) {
     next();
 }
 
-// MongoDB Connection
-mongoose.connect('mongodb://localhost:27017/blogDB')
+// MongoDB Atlas Connection
+mongoose.connect(process.env.MONGO_URI)
     .then(() => {
-        console.log("Connection Successfull");
+        console.log("MongoDB Atlas Connected Successfully!");
+        
+        app.listen(5000, () => {
+            console.log('Server running on port 5000');
+        });
     })
     .catch((error) => {
-        console.log("MongoDB Error:", error);
+        console.log("MongoDB Connection Error:", error);
     });
 
 // Blog Schema
@@ -173,7 +179,3 @@ app.delete('/api/blogs/:id', verifyFirebaseToken, adminOnly, async (req, res) =>
     }
 });
 
-// Start Server
-app.listen(5000, () => {
-    console.log('Server running on port 5000');
-});
